@@ -1,0 +1,16 @@
+@startuml Singleton
+skinparam classAttributeIconSize 0
+'skinparam linetype ortho
+'skinparam linetype polyline
+
+class Client{
+
+}
+class Singleton{
+    {static}-instance: Singleton
+    -Singleton()
+    {static}+getInstance():Singleton
+}
+Singleton::instance --> Singleton
+Client -right-> Singleton::getInstance
+@enduml

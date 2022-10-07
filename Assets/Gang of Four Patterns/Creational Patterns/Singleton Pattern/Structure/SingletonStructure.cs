@@ -5,36 +5,39 @@
 
 using UnityEngine;
 
-public class SingletonStructure : MonoBehaviour
+namespace SingletonStructure
 {
-    void Start()
+    public class SingletonStructure : MonoBehaviour
     {
-        Singleton s1 = Singleton.Instance;
-        Singleton s2 = Singleton.Instance;
-
-        if (s1 == s2)
-            Debug.Log("Objects are same instance");
-    }
-}
-
-public class Singleton
-{
-    private static Singleton _instance;
-
-    // Constructor is 'private', if need to be inheritable, set 'private' to 'protected'
-    private Singleton() { }
-
-    public static Singleton Instance
-    {
-        get
+        void Start()
         {
-            // not thread-safe.
-            if (_instance == null)
-            {
-                _instance = new Singleton();
-            }
-            return _instance;
+            Singleton s1 = Singleton.Instance;
+            Singleton s2 = Singleton.Instance;
+
+            if (s1 == s2)
+                Debug.Log("Objects are same instance");
         }
     }
 
+    public class Singleton
+    {
+        private static Singleton _instance;
+
+        // Constructor is 'private', if need to be inheritable, set 'private' to 'protected'
+        private Singleton() { }
+
+        public static Singleton Instance
+        {
+            get
+            {
+                // not thread-safe.
+                if (_instance == null)
+                {
+                    _instance = new Singleton();
+                }
+                return _instance;
+            }
+        }
+
+    }
 }

@@ -7,93 +7,96 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingletonPatternExample2 : MonoBehaviour
+namespace SingletonPatternExample2
 {
-    private void Awake()
+    public class SingletonPatternExample2 : MonoBehaviour
     {
-        Game gameData = DataCenter.Instance.GetData<Game>();
-        Debug.Log("Awake Coin: " + gameData.Coin);
-        gameData.Coin = 100;
-    }
-
-    void Start()
-    {
-        Game gameData = DataCenter.Instance.GetData<Game>();
-        Global global = DataCenter.Instance.GetData<Global>();
-
-        Debug.Log("Start Coin: " + gameData.Coin);
-        Debug.Log("Start serverToken: " + global.ServerToken);
-    }
-}
-
-public sealed class DataCenter
-{
-    private static DataCenter _instance = null;
-    private readonly Dictionary<Type, object> DataCollections = new Dictionary<Type, object>();
-    public static DataCenter Instance
-    {
-        get
+        private void Awake()
         {
-            if (_instance == null)
+            Game gameData = DataCenter.Instance.GetData<Game>();
+            Debug.Log("Awake Coin: " + gameData.Coin);
+            gameData.Coin = 100;
+        }
+
+        void Start()
+        {
+            Game gameData = DataCenter.Instance.GetData<Game>();
+            Global global = DataCenter.Instance.GetData<Global>();
+
+            Debug.Log("Start Coin: " + gameData.Coin);
+            Debug.Log("Start serverToken: " + global.ServerToken);
+        }
+    }
+
+    public sealed class DataCenter
+    {
+        private static DataCenter _instance = null;
+        private readonly Dictionary<Type, object> DataCollections = new Dictionary<Type, object>();
+        public static DataCenter Instance
+        {
+            get
             {
-                lock (typeof(DataCenter))
+                if (_instance == null)
                 {
-                    if (_instance == null)
+                    lock (typeof(DataCenter))
                     {
-                        _instance = new DataCenter();
+                        if (_instance == null)
+                        {
+                            _instance = new DataCenter();
+                        }
                     }
                 }
+                return _instance;
             }
-            return _instance;
+        }
+
+        public T GetData<T>() where T : class
+        {
+            Type dataType = typeof(T);
+            object dataCollection;
+            if (!DataCollections.TryGetValue(dataType, out dataCollection))
+            {
+                dataCollection = CreateDataCollection(dataType);
+            }
+
+            return dataCollection as T;
+        }
+
+        private object CreateDataCollection(Type dataType)
+        {
+            object dataCollection = Activator.CreateInstance(dataType);
+            DataCollections.Add(dataType, dataCollection);
+
+            return dataCollection;
         }
     }
 
-    public T GetData<T>() where T : class
+    public class Global
     {
-        Type dataType = typeof(T);
-        object dataCollection;
-        if (!DataCollections.TryGetValue(dataType, out dataCollection))
+        private string _serverToken = "sdlfihaiosudefhy9ih3wq";
+        public string ServerToken
         {
-            dataCollection = CreateDataCollection(dataType);
-        }
-
-        return dataCollection as T;
-    }
-
-    private object CreateDataCollection(Type dataType)
-    {
-        object dataCollection = Activator.CreateInstance(dataType);
-        DataCollections.Add(dataType, dataCollection);
-
-        return dataCollection;
-    }
-}
-
-public class Global
-{
-    private string _serverToken = "sdlfihaiosudefhy9ih3wq";
-    public string ServerToken
-    {
-        get
-        {
-            return _serverToken;
-        }
-        set
-        {
-            _serverToken = value;
+            get
+            {
+                return _serverToken;
+            }
+            set
+            {
+                _serverToken = value;
+            }
         }
     }
-}
 
-public class Game
-{
-    private int _coin = 10;
-    public int Coin
+    public class Game
     {
-        get { return _coin; }
-        set
+        private int _coin = 10;
+        public int Coin
         {
-            _coin = value;
+            get { return _coin; }
+            set
+            {
+                _coin = value;
+            }
         }
     }
 }

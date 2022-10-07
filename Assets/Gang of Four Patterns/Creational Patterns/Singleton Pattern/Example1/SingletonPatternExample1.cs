@@ -5,44 +5,47 @@
 
 using UnityEngine;
 
-public class SingletonPatternExample1 : MonoBehaviour
+namespace SingletonPatternExample1
 {
-    void Start()
+    public class SingletonPatternExample1 : MonoBehaviour
     {
-        AudioEngine.Instance.PlayMusic();
-        ResourceLoader.Instance.Load();
-    }
-}
-
-public abstract class Singleton<T> where T : class, new()
-{
-    private static T _instance = null;
-
-    public static T Instance
-    {
-        get
+        void Start()
         {
-            if (_instance == null)
-            {
-                _instance = new T();
-            }
-            return _instance;
+            AudioEngine.Instance.PlayMusic();
+            ResourceLoader.Instance.Load();
         }
     }
-}
 
-public class AudioEngine : Singleton<AudioEngine>
-{
-    public void PlayMusic()
+    public abstract class Singleton<T> where T : class, new()
     {
-        Debug.Log("AudioEngine PlayMusic!");
+        private static T _instance = null;
+
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new T();
+                }
+                return _instance;
+            }
+        }
     }
-}
 
-public class ResourceLoader : Singleton<ResourceLoader>
-{
-    public void Load()
+    public class AudioEngine : Singleton<AudioEngine>
     {
-        Debug.Log("ResourceLoader Load!");
+        public void PlayMusic()
+        {
+            Debug.Log("AudioEngine PlayMusic!");
+        }
+    }
+
+    public class ResourceLoader : Singleton<ResourceLoader>
+    {
+        public void Load()
+        {
+            Debug.Log("ResourceLoader Load!");
+        }
     }
 }

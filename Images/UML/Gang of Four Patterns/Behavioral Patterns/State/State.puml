@@ -1,0 +1,31 @@
+@startuml State
+skinparam classAttributeIconSize 0
+
+'skinparam linetype ortho
+'skinparam linetype polyline
+
+class Context{
+    +request()
+}
+
+note left of Context::request
+  state.handle()
+end note
+
+interface State{
+    +handler()
+}
+
+class ConcreteStateA{
+    +handler()
+}
+
+class ConcreteStateB{
+    +handler()
+}
+
+Context o-> State
+ConcreteStateA .up.|> State
+ConcreteStateB .up.|> State
+
+@enduml
